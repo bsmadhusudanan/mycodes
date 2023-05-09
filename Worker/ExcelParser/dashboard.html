@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CERT | Dashboard</title>
+    <link rel="icon" type="image/png" href="img/favicon.png" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="css/themify.css">
+    <script src="js/chart.js"></script>
+</head>
+<body>
+  <header></header>
+  <aside></aside>
+  <section>
+    <div class="container">
+      <div class="pagebar">
+        <ul>
+            <li id=""><a href="home.html">Home</a></li>
+            <li id="">Dashboard</li>
+        </ul>
+        <div class="clearfix"></div>
+    </div>
+      <div class="row">
+          <div class="col-md-6 col-12">
+              <div class="card">
+                  <div class="card-header"><h5>Data Chart</h5></div>
+                  <div class="card-body"><canvas id="myChart1"></canvas></div>
+              </div>
+          </div>
+          <div class="col-md-6 col-12">
+              <div class="card">
+                  <div class="card-header"><h5>Data Chart</h5></div>
+                  <div class="card-body"> <canvas id="myChart2"></canvas></div>
+              </div>
+          </div>
+          <div class="col-md-4 col-12">
+              <div class="card">
+                  <div class="card-header"><h5>Data Chart</h5></div>
+                  <div class="card-body"><canvas id="myChart4"></canvas></div>
+              </div>
+          </div>
+          <div class="col-md-4 col-12">
+              <div class="card">
+                  <div class="card-header"><h5>Data Chart</h5></div>
+                  <div class="card-body"><canvas id="myChart5"></canvas></div>
+              </div>
+          </div>
+          <div class="col-md-4 col-12">
+              <div class="card">
+                  <div class="card-header"><h5>Data Chart</h5></div>
+                  <div class="card-body"><canvas id="myChart6"></canvas></div>
+              </div>
+          </div>
+      </div>
+    </div>
+    <footer></footer>
+  </section>
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/layout.js"></script>
+<script>add('Dashboard', 'active');</script>
+<script>
+  
+    const ctx1 = document.getElementById('myChart1');
+    new Chart(ctx1, {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{
+          label: 'Data1',
+          data: [10, 29, 23, 21, 20, 36],
+          borderWidth: 1
+        },
+        {
+          label: 'Data2',
+          data: [12, 19, 13, 25, 22, 30],
+          borderWidth: 1
+        },
+        {
+          label: 'Data3',
+          data: [8, 15, 19, 22, 25, 25],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+
+    const ctx2 = document.getElementById('myChart2');
+    new Chart(ctx2, {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{
+          label: 'Data1',
+          data: [15, 22, 17, 22, 20, 24],
+          borderWidth: 1
+        },
+        {
+          label: 'Data2',
+          data: [12, 19, 13, 25, 22, 30],
+          borderWidth: 1
+        },
+        {
+          label: 'Data3',
+          data: [5, 25, 10, 25, 25, 15],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+    
+    const ctx4 = document.getElementById('myChart4');
+    new Chart(ctx4, {
+      type: 'pie',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{
+          label: 'Trafic',
+          data: [12, 19, 13, 25, 22, 30],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+
+    const ctx5 = document.getElementById('myChart5');
+    new Chart(ctx5, {
+      type: 'polarArea',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{
+          label: 'Trafic',
+          data: [12, 19, 13, 25, 22, 25],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+
+    const ctx6 = document.getElementById('myChart6');
+    new Chart(ctx6, {
+      type: 'doughnut',
+      data: {
+        labels: ['Data1', 'Data2', 'Data3', 'Data4'],
+        datasets: [{
+          label: 'Trafic',
+          data: [12, 19, 13, 7],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+ 
+  </script>
+</body>
+</html>

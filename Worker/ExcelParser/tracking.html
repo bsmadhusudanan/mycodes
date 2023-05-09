@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CERT | Fleet</title>
+    <link rel="icon" type="image/png" href="img/favicon.png" />
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="css/themify.css">
+</head>
+<body>
+    <header></header>
+    <aside></aside>
+    <section>
+        <div class="container">
+            <div class="pagebar">
+                <ul>
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="tracking.html">Tracking</a></li>
+                    <li>Taxi Status</li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="card p-3">
+                <form action="" class="form">
+                    <div class="row">
+                        <div class="col-md-2 col-3">
+                            <select class="">
+                                <option value="">Taxi No.</option>
+                                <option value="">Driver Id</option>
+                                <option value="">Permit No.</option>
+                                <option value="">Unit No.</option>
+                            </select>
+                        </div>
+                        <div class="col-md-8 col-7">
+                            <input type="text">
+                        </div>
+                        <div class="col-md-2 col-2">
+                            <a href="" class="btn btn-primary btn-sm float-end m-1">Filter</a>
+                            <a href="" class="btn btn-primary btn-sm float-end m-1">export</a>
+                        </div>
+                    </div>
+                    <div class="clearfix mb-2"></div>              
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover table-bordered mb-0">
+                            <tr>
+                                <th>S No.</th>
+                                <th>Taxi No.</th>
+                                <th>Driver ID</th>
+                                <th>Permit No.</th>
+                                <th>Driver Name</th>
+                                <th>Nationality</th>
+                                <th>Phone No.</th>
+                                <th>Unit No.</th>
+                                <th>Zone</th>
+                                <th>Region</th>
+                                <th>Track Time</th>
+                                <th>Comm. Time</th>
+                                <th>Diff(Min)</th>
+                                <th>Taxi Type</th>
+                                <th>Speed(km/hr)</th>
+                                <th>Meter Status</th>
+                                <th>GPS Status</th>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td><a href="" data-bs-toggle="modal" data-bs-target="#TaxiDetails">AD 7795</a></td>
+                                <td><a href="" data-bs-toggle="modal" data-bs-target="#DriverProfile">155468</a></td>
+                                <td>354854</td>
+                                <td>Muhammad Tahir</td>
+                                <td>Pakistan</td>
+                                <td>097123456789</td>
+                                <td><a href="">1145786</a></td>
+                                <td>Civic Center</td>
+                                <td>Abu Dhabi</td>
+                                <td>20/09/2024 17:30:51</td>
+                                <td>20/09/2024 17:30:51</td>
+                                <td>0</td>
+                                <td>Standard</td>
+                                <td>34</td>
+                                <td>Free</td>
+                                <td>A</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td><a href="" data-bs-toggle="modal" data-bs-target="#TaxiDetails">AD 2236</a></td>
+                                <td><a href="" data-bs-toggle="modal" data-bs-target="#DriverProfile">654897</a></td>
+                                <td>65989</td>
+                                <td>Numan Masood</td>
+                                <td>Pakistan</td>
+                                <td>097123456789</td>
+                                <td><a href="">1145786</a></td>
+                                <td>Majlood</td>
+                                <td>Abu Dhabi</td>
+                                <td>20/09/2024 17:30:51</td>
+                                <td>20/09/2024 17:30:51</td>
+                                <td>0</td>
+                                <td>Standard</td>
+                                <td>34</td>
+                                <td>Hired</td>
+                                <td>A</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="clearfix mb-3"></div>
+                    <div class="row">
+                        <div class="col-6">
+                            <nav class="">
+                                <ul class="pagination m-0 p-0">
+                                    <li class="page-item disabled"><span class="page-link"><</span></li>
+                                    <li class="page-item active" aria-current="page"><span class="page-link">1</span></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">4</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">5</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">></a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <div class="col-6">
+                            <select class="float-end" style="width: 60px;">
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="200">200</option>
+                            </select>
+                            <p class="float-end textBlack5 p-2">1 - 10 / 56980</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <footer></footer>
+    </section>
+
+    <!-- Modal DriverProfile -->
+    <div class="modal fade" id="DriverProfile" tabindex="-1" aria-labelledby="DriverProfile" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="">Driver Profile</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img class="imgCenter " src="img/driver.jpg" alt="" width="150;">
+                <div class="clearfix mb-3"></div>
+                <table class="table table-bordered">
+                    <tr>
+                        <td>Driver ID</td>
+                        <td>14568</td>
+                    </tr>
+                    <tr>
+                        <td>Permit No.</td>
+                        <td>22354</td>
+                    </tr>
+                    <tr>
+                        <td>Driver Name</td>
+                        <td>Muhammad Ali Khan</td>
+                    </tr>
+                    <tr>
+                        <td>Franchise</td>
+                        <td>Cars Taxi</td>
+                    </tr>
+                    <tr>
+                        <td>Nationality</td>
+                        <td>Pakistan</td>
+                    </tr>
+                    <tr>
+                        <td>Issue Date</td>
+                        <td>13/06/2018</td>
+                    </tr>
+                    <tr>
+                        <td>Expiry Date</td>
+                        <td>20/08/2024</td>
+                    </tr>
+                    <tr>
+                        <td>Operating Zone</td>
+                        <td>Abu Dhabi</td>
+                    </tr>
+                    <tr>
+                        <td>Mobile No.</td>
+                        <td>97156789876</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td>Active</td>
+                    </tr>
+                    <tr>
+                        <td>Assigned Taxi No.</td>
+                        <td>AD 5568</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+        </div>
+    </div>
+    <!-- Modal TaxiDetails -->
+    <div class="modal fade" id="TaxiDetails" tabindex="-1" aria-labelledby="TaxiDetails" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="">Driver Profile</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <tr>
+                        <td>Taxi No.</td>
+                        <td>AD 7895</td>
+                    </tr>
+                    <tr>
+                        <td>Manufacture</td>
+                        <td>Toyota</td>
+                    </tr>
+                    <tr>
+                        <td>Model</td>
+                        <td>Camry</td>
+                    </tr>
+                    <tr>
+                        <td>Year</td>
+                        <td>2019</td>
+                    </tr>
+                    <tr>
+                        <td>Franchise Name</td>
+                        <td>Cars Taxi</td>
+                    </tr>
+                    <tr>
+                        <td>Registration Date</td>
+                        <td>13/06/2019</td>
+                    </tr>
+                    <tr>
+                        <td>Registration Expiry</td>
+                        <td>20/08/2024</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+        </div>
+    </div>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/layout.js"></script>
+    <script>add('Tracking', 'active'); add('TaxiStatus', 'active'); </script>
+</body>
+</html>
