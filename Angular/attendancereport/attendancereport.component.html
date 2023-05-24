@@ -1,0 +1,151 @@
+<div class="page-content">
+    <div class="widget-box widget-color-blue ui-sortable-handle" id="transferSemester">
+      <div class="widget-header ">
+        <h4 class="widget-title bigger lighter">Attendance Register</h4>
+      </div>
+
+      <div class="step-pane active" >
+        <div class="col-offset-sm-3">
+          <div class="form-group">
+              <label class="col-sm-3 control-label no-padding-right">Filter By Program</label>
+              <div class="col-sm-9">
+                  <select id="Programs" name="Programs" class="col-md-9" (change)="getAllProgramGroup($event.target.value)">
+                      <option value="0">Choose Program</option>
+                      <option *ngFor="let pgm of _programDataList;"  [value]="pgm.ProgramID">{{pgm.Title}}</option>
+                  </select>
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="col-sm-3 control-label no-padding-right">Filter By Program Group</label>
+              <div class="col-sm-9">
+                  <select id="ProgramGroups" name="ProgramGroups" class="col-md-9" (change)="getAllBatch($event.target.value)">
+                      <option value="0">Choose Program Group</option>
+                      <option *ngFor="let pgm of _programGroupDataList;"  [value]="pgm.ProgramGroupID">{{pgm.Title+'('+pgm.Years+'Y,'+pgm.Months+'M)'}}</option>
+                  </select>
+              </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right">Filter By Batch</label>
+            <div class="col-sm-9">
+                <select id="Batches" name="Batches" class="col-md-9" (change)="getAllBatchStudents($event.target.value, true)">
+                    <option value="0">Choose Batch</option>
+                    <option *ngFor="let batch of _batchDataList;"  [value]="batch.BatchID">{{batch.Title+'('+batch.Code+')'}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label no-padding-right">Filter By Semester</label>
+          <div class="col-sm-9">
+              <select id="Semester" name="Semester" class="col-md-9" (change)="getAllBatchSemesterStudents($event.target.value)">
+                  <option value="0">Choose Semester</option>
+                  <option *ngFor="let semester of _semesterDataList;"  [value]="semester.BatchSemesterID">{{semester.Description}}</option>
+              </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label no-padding-right">Filter By Section</label>
+          <div class="col-sm-9">
+              <select id="Sections" name="Sections" class="col-md-9" (change)="getAllSectionWeeklySchedule($event.target.value)">
+                  <option value="0">Choose Section</option>
+                  <option *ngFor="let section of _sectionDataList;"  [value]="section.SectionID">{{section.Title+'('+section.Code+')'}}</option>
+              </select>
+          </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right">Semester Weekly Schedules</label>
+        <div class="col-sm-9">
+            <select id="SemesterWeeklySchedules" name="SemesterWeeklySchedules" class="col-md-9" (change)="getSemesterWeekDaysSchedule($event.target.value)">
+                <option value="0">Choose Semester Weekly Schedules</option>
+                <option *ngFor="let ss of _semesterWeeklyScheduleDataList;"  [value]="ss.SectionWeeklyScheduleID">{{ss?.StartDT.split('T')[0] | date: 'dd/MM/yyyy'}} {{' to '}} {{ss?.EndDT.split('T')[0] | date: 'dd/MM/yyyy'}}</option>
+            </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label no-padding-right">Week Day Schedule</label>
+        <div class="col-sm-9">
+            <select id="WeekDaySchedule" name="WeekDaySchedule" class="col-md-9" (change)="getSemesterDaySchedule($event.target.value)">
+                <option value="0">Choose Week Day</option>
+                <option *ngFor="let ss of _semesterWeekDayScheduleDataList;"  [value]="ss.SectionWeekDayScheduleID">{{ss?.ScheduleDate.split('T')[0] | date: 'dd/MM/yyyy'}} </option>
+            </select>
+        </div>
+      </div>
+
+        <div class="form-group">
+          <label class="col-sm-3 control-label no-padding-right">Select Period </label>
+          <div class="col-sm-9">
+              <select id="Student" name="Student" class="col-md-9" (change)="getAllStudentAttendance($event.target.value)">
+                  <option value="0">Choose Course</option>
+                  <option *ngFor="let scs of _sectionPeriodScheduleDataList;"  [value]="scs.SectionDayScheduleID">{{'Period No. : '+scs?.PN + scs?.FullName+'('+scs?.Code+') by '+scs?.FacultyName+'('+scs?.FacultyCode+')'}}</option>
+              </select>
+          </div>
+        </div>
+            <div class="form-group">
+              <span id="errorMessage" class="fc-center error-text"></span>
+            </div>
+        </div>
+        <table class="table table-striped table-bordered table-hover" id="studentList">
+            <tbody>
+              <tr>
+                <th width="5%">Sl.No</th>
+                <th width="30%">Name</th>
+                <th width="10%">Attendance</th>
+                <th width="*">Remarks
+                    <select id="MarkAll" name="MarkAll" class="col-md-9" (change)="markAllAttendance($event.target.value)">
+                        <option value="0">Apply All</option>
+                        <option value="P">Present</option>
+                        <option value="L">Late</option>
+                        <option value="Q">Absent Late</option>
+                        <option value="A">Absent</option>
+                        <option value="V">Valid excuse provided</option>
+                    </select>
+                  <button type="button" class="btn btn-primary btn-sm btn-success pull-right btns" (click)="SaveAttendance()">Save Changes</button>
+                </th>
+              </tr>
+              <tr *ngFor='let attendance of _studentAttendanceDataList; let i = index'>
+                  <td>{{i+1}}</td>
+                  <td>{{attendance.StudentName}}</td>
+                  <td><select id="attendanceStatusID" name="attendanceStatusID" class="attendanceStatus" [(ngModel)]="attendance.Status">
+                    <option value="P">Present</option>
+                    <option value="L">Late</option>
+                    <option value="Q">Absent Late</option>
+                    <option value="A">Absent</option>
+                    <option value="V">Valid excuse provided</option>
+                    </select>
+                  </td>
+                  <td><textarea [(ngModel)]="attendance.Remarks"></textarea></td>
+              </tr>
+            </tbody>
+          </table>
+      </div>
+    </div>
+    </div>
+
+  <!-- Model Begins Here -->
+
+  <div id="modal-remove" class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div id="modal-wizard-container">
+          <div class="modal-header">
+            <h3>Remove Student Profile from Program</h3>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-12">
+                <div>
+                    <div class="box-body">
+                        <p>Are you sure you want remove {{confirmationMessage}}</p>
+                    </div>
+                </div>
+              </div>
+              </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default pull-left btn-sm" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-danger btn-sm btnr" (click)="remove(removeItemID)">Remove</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Model Begins Here -->

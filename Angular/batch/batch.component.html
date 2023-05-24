@@ -1,0 +1,192 @@
+<div class="page-content">
+  <div class="widget-box widget-color-blue ui-sortable-handle">
+    <div class="widget-header text-center">
+      <h2 class="widget-title bigger lighter">Manage Batch</h2>
+      <div class="widget-toolbar">
+          <button type="button" class="btn btn-white btn-sm btn-success btnn hide" data-toggle="modal" data-target="#addOrEditMDL" (click)="addNew()">Add New</button>
+      </div>
+    </div>
+
+    <div class="widget-body">
+      <div class="widget-main">
+        <div id="fuelux-wizard-container">
+          <table class="table table-striped table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>Sl.No</th>
+                <th>Code</th>
+                <th>Title</th>
+                <th>Program Name</th>
+                <th>Program Group</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Notes</th>
+                <th>Status</th>
+                <th>Action
+                  <a data-toggle="modal" data-target="#addOrEditMDL" (click)="addNew()"  style="cursor: pointer;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle text-addnew"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                    </a>
+                </th>
+              </tr></thead>
+              <tr *ngFor='let batch of _batchDataList; let i = index'>
+                  <td>{{i+1}}</td>
+                  <td>{{batch.Code}}</td>
+                  <td>{{batch.Title}}</td>
+                  <td>{{batch.ProgramGroup.Program.Title + '(' + batch.ProgramGroup.Program.Code +')'}}</td>
+                  <td>{{batch.ProgramGroup.Title + '(' + batch.ProgramGroup.Code +')'}}</td>
+                  <td>{{(batch.StartDate == null)?'None':batch.StartDate.split('T')[0] | date: 'dd/MMM/yyyy' }}</td>
+                  <td>{{(batch.EndDate == null)?'None':batch.EndDate.split('T')[0] | date: 'dd/MMM/yyyy' }}</td>
+                  <td>{{batch.Notes  | slice:0:30}}</td>
+                  <td>{{batch.Status}}</td>
+                  <td>
+
+                    <a (click)="edit(batch)"  style="cursor: pointer;"  data-toggle="tooltip" data-placement="top" title="Edit"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 text-success"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg></a>
+                    <a (click)='confirmRemoval(batch)' style="cursor: pointer;" data-toggle="modal" data-target="#modal-remove"  data-placement="top" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2 text-danger"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></a>
+
+                      <button type="button"class="btn btn-primary btn-sm hide" (click)='edit(batch)'>Edit</button>
+                      <button type="button"class="btn btn-danger btnr btn-sm hide" (click)='confirmRemoval(batch)' data-toggle="modal" data-target="#modal-remove" >Remove</button>
+                  </td>
+              </tr>
+          </table>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Model Begins Here -->
+
+  <div id="addOrEditMDL" class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div id="modal-wizard-container">
+          <div class="modal-header">
+            <h3>{{action}} Batch</h3>
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal" #_batchForm="ngForm"  novalidate name="frmAddNew" id="frmAddNew">
+              <div>
+                <div class="form-group">
+                  <label class="col-md-12 control-label no-padding-right" >Code</label>
+                  <div class="col-md-12">
+                    <input type="hidden" id="BatchID" name="BatchID" [(ngModel)]="_batchViewModel.BatchID" />
+                    <input type="text" id="Code" name="Code" [(ngModel)]="_batchViewModel.Code" required class="col-md-12 form-control" >
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-12 control-label no-padding-right" >Title</label>
+                  <div class="col-md-12">
+                      <input type="text" id="Title" name="Title" [(ngModel)]="_batchViewModel.Title" class="col-md-12  form-control">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-12 control-label no-padding-right" >Program</label>
+                  <div class="col-md-12">
+                      <select id="FK_ProgramID" name="FK_ProgramID" class="col-md-12 form-control" (change)="getAllProgramGroup($event.target.value,false)">
+                          <option selected value="0"> Choose Program</option>
+                          <option *ngFor="let pgm of _programDataList;"  [value]="pgm.ProgramID">{{pgm.Title}}</option>
+                      </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-12 control-label no-padding-right" >Program Group</label>
+                  <div class="col-md-12">
+                      <select id="FK_ProgramGroupID" name="FK_ProgramGroupID" class="col-md-12 form-control" [(ngModel)]="_batchViewModel.FK_ProgramGroupID">
+                          <option *ngFor="let pgm of _programGroupDataList;"  [value]="pgm.ProgramGroupID">{{pgm.Title+'('+pgm.Years+'Y,'+pgm.Months+'M)'}}</option>
+                      </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-12 control-label no-padding-right" >Start Date</label>
+                  <div class="col-md-12">
+                      <input type="text" id="StartDate" name="StartDate" [(ngModel)]="_batchViewModel.StartDate" class="col-md-12 form-control startDate">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-12 control-label no-padding-right" >City</label>
+                  <div class="col-md-12">
+                      <select id="FK_CityID" name="FK_CityID" (change)="getAllLocationsByCityID($event.target.value, false)" class="col-md-12 form-control">
+                          <option selected value="0"> -- select a city -- </option>
+                          <option *ngFor="let city  of _cityDataList;"  [value]="city.CityID">{{city.Name+'('+city.Code+')'}}</option>
+                      </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-12 control-label no-padding-right" >Location</label>
+                  <div class="col-md-12">
+                      <select id="FK_LocationID" name="FK_LocationID" class="col-md-12 form-control" (change)="getAllClassRoomByLocationIDandCityID($event.target.value, false)">
+                          <option selected value="0"> -- select a location -- </option>
+                          <option *ngFor="let location  of _locationDataList;"  [value]="location.LocationID">{{location.LocationName+'('+location.Code+')'}}</option>
+                      </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-12 control-label no-padding-right" >Class Room</label>
+                  <div class="col-md-12">
+                      <select id="FK_ClassRoomID" name="FK_ClassRoomID" [(ngModel)]="_batchViewModel.FK_ClassRoomID" class="col-md-12 form-control">
+                          <option selected value="0"> -- select a location -- </option>
+                          <option *ngFor="let cr  of _classRoomDataList;"  [value]="cr.ClassRoomID">{{cr.Title+'('+cr.Code+')'}}</option>
+                      </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-12 control-label no-padding-right" >Notes</label>
+                  <div class="col-md-12">
+                      <textarea id="Notes" name="Notes" [(ngModel)]="_batchViewModel.Notes" rows="3" cols="100" class="col-md-12 form-control" ></textarea>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-md-3 control-label no-padding-right">Status</label>
+                  <div class="col-md-12">
+                    <select class="col-md-12 form-control" id="Status" [(ngModel)]="_batchViewModel.Status" name="Status">
+                      <option value="Active">Active</option>
+                      <option value="InActive">InActive</option>
+                    </select>
+                  </div>
+              </div>
+              </div>
+          <div class="form-group">
+              <span id="errorMessage" class="fc-center error-text"></span>
+            </div>
+          </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary btn-sm btns" (click)="save(_batchForm.valid, _batchForm.value,true)" >Save and Add More</button>
+          <button type="submit" class="btn btn-primary btn-sm btns" (click)="save(_batchForm.valid, _batchForm.value,false)" >Save</button>
+          <button class="btn btn-danger btn-sm pull-left" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Model Begins Here -->
+
+
+<!-- Model Begins Here -->
+<div id="modal-remove" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div id="modal-wizard-container">
+        <div class="modal-header">
+          <h3>Remove Batch</h3>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-12">
+              <div>
+                  <div class="box-body">
+                      <p>Are you sure you want remove {{confirmationMessage}}</p>
+                  </div>
+              </div>
+            </div>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+        <button type="submit"  class="btn btn-danger btnr" (click)="remove(removeItemID)">Remove</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Model Begins Here -->

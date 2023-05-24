@@ -1,0 +1,669 @@
+
+
+
+<div class="page-content">
+  <div class="widget-box widget-color-blue ui-sortable-handle">
+    <div class="widget-header text-center ">
+      <h2 class="widget-title bigger lighter">Assessment Repository</h2>
+    </div>
+    <div class="row">
+      <div class="col-md-12 ">
+        <select class="form-control col-md-4 float-right" id="_courseMaterialID" [(ngModel)]="_courseMaterialID" name="_courseMaterialID"  (change)="getAllAssessmentQuestion($event.target.value)">
+          <option selected value="0">Select Course Material</option>
+          <option *ngFor="let _cm of _courseMaterialDataList;"  [value]="_cm.CourseMaterialID">{{_cm.Title+"-"+_cm.Code}}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <!-- Wizard Starts Here -->
+
+        <div class="row layout-top-spacing" id="cancel-row">
+          <div class="col-lg-12 layout-spacing">
+              <div class="statbox widget box box-shadow">
+                  <div class="widget-content widget-content-area">
+                    <div id="assessmentWizard">
+                      <div class="row wizard-bottom">
+                          <div class="col-lg-3 text-center" id="_si1_" (click)="wizardNavigator(1,_assessmentWizard,true)">
+                              <span id="stpstyle1">Assessment Bank</span>
+                          </div>
+                          <div class="col-lg-3 text-center" id="_si2_" (click)="wizardNavigator(2,_assessmentWizard,true)">
+                              <span id="sp02">Question</span>
+                          </div>
+                          <div class="col-lg-3 text-center" id="_si3_" (click)="wizardNavigator(3,_assessmentWizard,true)">
+                              <span id="sp03">Options</span>
+                          </div>
+                          <div class="col-lg-3 text-center" id="_si4_" (click)="wizardNavigator(4,_assessmentWizard,true)">
+                              <span id="sp04">Answers</span>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col-md-12">
+                            <!-- Step 01 Starts Here -->
+                              <div id="__sic1__">
+                                <table class="table table-striped table-bordered table-hover" id="tblAssessmentQuestionTBL">
+                                  <thead>
+                                    <tr>
+                                      <th>Sl.No</th>
+                                      <th>Title</th>
+                                      <th>Assessment Type</th>
+                                      <th>Notes</th>
+                                      <th>Action <button type="button" class="btn btn-white btn-sm btn-success float-right" data-toggle="modal" data-target="#addOrEditMDL" (click)="addNew()">Add New</button></th>
+                                    </tr>
+                                  </thead>
+                                    <tr *ngFor='let _a of _assessmentQuestionDataList; let i = index'>
+                                        <td>{{i+1}}</td>
+                                        <td>{{_a.Title}}</td>
+                                        <td>{{getAbbrivatedString(_a.AQType)}}</td>
+                                        <td>{{_a.Notes}}</td>
+                                        <td>
+                                            <button type="button"class="btn btn-primary btn-sm" (click)='edit(_a)'>Edit</button>
+                                            <button type="button"class="btn btn-danger btn-sm" (click)='confirmRemoval(_a)'  data-toggle="modal" data-target="#modal-remove" >Remove</button>
+                                            <button type="button"class="btn btn-primary btn-sm" (click)='getAssessment(_a,true)'>Select</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                              </div>
+                              <!-- Step 01 Ends Here -->
+                              <!-- Step 02 Starts Here -->
+                              <div id="__sic2__">
+                                <div class="container" style="display: flex;align-items: center;">
+                                  <div class="col-md-12">
+                                      <!-- Content Rendering Starts Here -->
+                                      <table >
+                                        <tbody>
+                                          <tr *ngFor='let _content of _questionContentDataList; let i = index'>
+                                            <td>
+                                              <div  class="bs-docs-section" >
+                                                <span class="label label-info arrowed-right arrowed-in index">{{_content.OrderID}}</span>
+                                                <input type="hidden" id="{{_content.ID}}" name="{{_content.ID}}" value="{{_content.ID}}" />
+                                                <button type="button"class="btn btn-sm btn-danger pull-right" (click)="confirmRemovalQC(_content)" >Remove</button>
+                                                <button type="button"class="btn btn-sm btn-primary pull-right" (click)="editQuestionContent(_content)">Edit</button>
+        
+                                                <div class="{{checkTextEmpty(_content.QCKey)}}">
+                                                  <div [innerHTML]="_content?.QCValue | keepHtml"></div>
+                                                </div>
+                                                <div class="text-center {{checkImageEmpty(_content.QCKey)}}">
+                                                  <img src="{{_content.QCValue}}" class="img-responsive pad center-block ros-image-size"/>
+                                                </div>
+                                                <div class="text-center {{checkAudioEmpty(_content.QCKey)}}">
+                                                  <audio controls>
+                                                    <source src="{{_content.QCValue}}" type="audio/mp3"/>
+                                                  </audio>
+                                                </div>
+                                                <div class="text-center  {{checkVideoEmpty(_content.QCKey)}}">
+                                                  <video width="320" height="240" controls>
+                                                    <source src="{{_content.QCValue}}" type="video/mp4">
+                                                    Your browser does not support the video tag.
+                                                  </video>
+                                                </div>
+                                                <!-- <div class="text-center  {{checkEmpty(_content?.DownloadURL)}}">
+                                                    <a target="_blank" href="{{_content.DownloadURL}}">{{_content?.Title==""?"Click Here to Download":_content?.Title}}</a>
+                                                </div> -->
+                                              </div>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    <!-- Content Rendering Ends Here -->
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-md-12 text-center">
+                                    <button type="button"class="btn btn-primary btn-sm" data-target="#addOrEditQTNTC"   data-toggle="modal"  (click)='addTextContent(_a)'>Text Content</button>
+                                    <button type="button"class="btn btn-primary btn-sm" data-target="#addOrEditQTNVD"   data-toggle="modal" (click)='addVideo(_a)'>Video</button>
+                                    <button type="button"class="btn btn-primary btn-sm" data-target="#addOrEditQTNIMG"   data-toggle="modal" (click)='addImage(_a)'>Image</button>
+                                    <button type="button"class="btn btn-primary btn-sm" data-target="#addOrEditQTNAD"   data-toggle="modal" (click)='addAudio(_a)'>Audio</button>
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- Step 02 Ends Here -->
+                              <!-- Step 03 Starts Here -->
+                              <div id="__sic3__">
+                                <div class="col-md-12 text-center">
+                                  <table class="table table-striped table-bordered table-hover">
+                                    <thead>
+                                      <tr>
+                                        <th>Sl.No</th>
+                                        <th>Title</th>
+                                        <th>Control</th>
+                                        <th>Action
+                                          <button id="btnAddTextBox" type="button"class="btn btn-primary btn-sm" data-target="#addOrEditQCTA"   data-toggle="modal" (click)='addTextBox()'>Add Option</button>
+                                          <button id="btnAddComment" type="button"class="btn btn-primary btn-sm" data-target="#addOrEditQCTA"   data-toggle="modal" (click)='addCommentBox()'>Add Comment</button>
+                                        </th>
+                                      </tr></thead>
+
+                                      <tr *ngFor='let _a of _questionOptionDataList; let i = index'>
+                                          <td>{{i+1}}</td>
+                                          <td>{{_a?.QCValue}}</td>
+                                          <td><div [innerHTML]="(getControlObject(_a)) | keepHtml"></div></td>
+                                          <td>
+                                              <!-- <button type="button"class="btn btn-primary btn-sm" (click)='edit(_a)'>Edit</button> -->
+                                              <button type="button"class="btn btn-danger btn-sm" (click)='confirmRemovalTA(_a)' >Remove</button>
+                                          </td>
+                                      </tr>
+                                  </table>
+                                </div>
+                                <div class="col-md-12 text-center">
+                                  
+                                  <!-- <button id="btnAddOption" type="button"class="btn btn-primary btn-sm" data-target="#addOrEditQCOB"   data-toggle="modal" (click)='addOption()'>Add Option Button</button> -->
+                                </div>
+                              </div>
+                              <!-- Step 03 Ends Here -->
+                              <!-- Step 04 Starts Here -->
+                              <div id="__sic4__">
+                                <section> 
+                                  <div class="col-md-12 text-center">
+                                    <table class="table table-striped table-bordered table-hover">
+                                      <thead>
+                                        <tr>
+                                          <th>Sl.No</th>
+                                          <th>Title</th>
+                                          <th>Action
+                                            <button id="btnAddTextBox" type="button"class="btn btn-primary btn-sm float-right" data-target="#addOrEditQATA"  data-toggle="modal" (click)='addQA()'>Add Answer</button>
+                                          </th>
+                                        </tr></thead>
+                                        <tr *ngFor='let _a of _questionAnswerDataList; let i = index'>
+                                            <td>{{i+1}}</td>
+                                            <td>{{_a?.QCValue}}</td>
+                                            <td>
+                                                <button type="button"class="btn btn-primary btn-sm" (click)='edit(_a)'>Edit</button>
+                                                <button type="button"class="btn btn-danger btn-sm" (click)='confirmRemovalQATA(_a)' >Remove</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                  </div>
+                                </section>
+                              </div>
+                              <!-- Step 04 Ends Here -->
+                          </div>
+                      </div>
+                      <div class="row" id="navigator">
+                          <div class="col-md-6">
+                              <button class="btn btn-white btn-sm btn-success float-left btn-previous" (click)="wizardNavigator(_assessmentWizard._currentStep-1,_assessmentWizard,false)"  type="button">Previous</button>
+                          </div>
+                          <div class="col-md-6">
+                              <button class="btn btn-white btn-sm btn-success float-right btn-next" (click)="wizardNavigator(_assessmentWizard._currentStep+1,_assessmentWizard,false)"  type="button">Next</button>
+                          </div>
+                      </div>
+                  </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+    <!-- Wizard Ends Here -->
+      </div>
+    </div>
+  
+</div>
+</div>
+
+<!-- Model Begins Here -->
+
+  <div id="addOrEditMDL" class="modal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div id="modal-wizard-container">
+          <div class="modal-header">
+            <h3>Assessment</h3>
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal" #_assessmentQuestionForm="ngForm"  novalidate name="frmAddNew" id="frmAddNew">
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" >Title</label>
+                <div class="col-sm-9">
+                  <input type="hidden" id="AssessmentQuestionID" name="AssessmentQuestionID" [(ngModel)]="_assessmentQuestionViewModel.AssessmentQuestionID" />
+                  <input type="text" id="Title" name="Title" [(ngModel)]="_assessmentQuestionViewModel.Title" required class="col-md-12 form-control" >
+                </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label no-padding-right" >Course Material</label>
+              <div class="col-sm-9">
+                 <select class="col-md-12 form-control" id="FK_CourseMaterialID" [(ngModel)]="_assessmentQuestionViewModel.FK_CourseMaterialID" name="FK_CourseMaterialID">
+                  <option selected value="0"> Choose Course Material</option>
+                  <option *ngFor="let _cm of _courseMaterialDataList;"  [value]="_cm.CourseMaterialID">{{_cm.Title+"-"+_cm.Code}}</option>
+                  </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-md-12 control-label no-padding-right" >Type</label>
+              <div class="col-md-12">
+                 <select class="col-md-12 form-control" id="AQType" [(ngModel)]="_assessmentQuestionViewModel.AQType" name="AQType">
+                    <option value="TA">Text Answer</option>
+                    <option value="CAO">Choose Any One</option>
+                    <option value="CM">Choose Many</option>
+                    <option value="MTX">Matrix</option>
+                  </select>
+              </div>
+            </div>
+            <div class="form-group">
+                  <label class="col-md-12 control-label no-padding-right" >Notes</label>
+                  <div class="col-md-12">
+                      <textarea id="Notes" name="Notes" maxlength="4000" required [(ngModel)]="_assessmentQuestionViewModel.Notes" rows="3" class="col-md-12 form-control"></textarea>
+                  </div>
+             </div>
+            <div class="form-group">
+              <span id="errorMessage" class="fc-center error-text"></span>
+            </div>
+          </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary btn-sm" (click)="save(_assessmentQuestionForm.valid, _assessmentQuestionForm.value,false)" >Save</button>
+          <button type="button" (click)="cancelCM()" class="btn btn-danger btn-sm pull-left" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Model Begins Here -->
+
+
+<!-- Model Begins Here -->
+
+<div id="addOrEditQTNTC" class="modal">
+  <div class="modal-dialog-lg">
+    <div class="modal-content">
+      <div id="modal-wizard-container">
+        <div class="modal-header">
+          <h3>Questionnaire Text and Image</h3>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" #_questionContentForm="ngForm"  novalidate name="frmAddNew" id="frmAddNew">
+          <div class="form-group" id="tc">
+            <label class="col-sm-12 pull-left" >Text Content</label>
+            <div class="col-sm-12">
+              <input type="hidden" id="QCKey" name="QCKey" [(ngModel)]="_questionContentViewModel.QCKey" />
+              <input type="hidden" id="ID" name="ID" [(ngModel)]="_questionContentViewModel.ID" />
+              <input type="hidden" id="OrderID" name="OrderID" [(ngModel)]="_questionContentViewModel.OrderID" />
+              <!-- <textarea  name="QCValue" rows="10" cols="30" style="height:440px" [(ngModel)]="_questionContentViewModel.QCValue" aria-label="editor"></textarea> -->
+              <textarea id="QCValue" class="col-md-12 form-control" name="QCValue" rows="10" cols="30" style="height:440px" [(ngModel)]="_questionContentViewModel.QCValue" aria-label="editor"></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <span id="errorMessageCourseChapterSection" class="fc-center error-text"></span>
+          </div>
+          <div class="form-group">
+            <span id="errorMessage" class="fc-center error-text"></span>
+          </div>
+        </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-sm" (click)="saveQuestionContent(_questionContentForm.valid, _questionContentForm.value,false)" >Save</button>
+        <button type="button" (click)="cancelCM()" class="btn btn-danger btn-sm pull-left" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Model Begins Here -->
+
+<!-- Model Begins Here -->
+
+<div id="addOrEditQTNAD" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div id="modal-wizard-container">
+        <div class="modal-header">
+          <h3>Media - Audio</h3>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" #_questionContentForm="ngForm"  novalidate name="frmAddNew" id="frmAddNew">
+          <div class="form-group" id="tc">
+            <label class="col-sm-12 pull-left" >URL</label>
+            <div class="col-sm-12">
+              <input type="hidden" id="QCKey" name="QCKey" [(ngModel)]="_questionContentViewModel.QCKey"/>
+              <input type="hidden" id="ID" name="ID" [(ngModel)]="_questionContentViewModel.ID" />
+              <input type="hidden" id="OrderID" name="OrderID" [(ngModel)]="_questionContentViewModel.OrderID" />
+              <!-- <input type="text" id="QCValue" name="QCValue" [(ngModel)]="_questionContentViewModel.QCValue"  class="col-md-12 form-control"  /> -->
+              <textarea id="QCValue" name="QCValue" maxlength="4000" required [(ngModel)]="_questionContentViewModel.QCValue" rows="3" class="col-md-12 form-control"></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <span id="errorMessageCourseChapterSection" class="fc-center error-text"></span>
+          </div>
+          <div class="form-group">
+            <span id="errorADMessage" class="fc-center error-text"></span>
+          </div>
+        </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-sm" (click)="saveQuestionContent(_questionContentForm.valid, _questionContentForm.value,false)" >Save</button>
+        <button type="button" (click)="cancelCM()" class="btn btn-danger btn-sm pull-left" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Model Begins Here -->
+
+<!-- Model Begins Here -->
+
+<div id="addOrEditQTNVD" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div id="modal-wizard-container">
+        <div class="modal-header">
+          <h3>Media - Video</h3>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" #_questionContentForm="ngForm"  novalidate name="frmAddNew" id="frmAddNew">
+          <div class="form-group" id="tc">
+            <label class="col-md-12 pull-left" >URL</label>
+            <div class="col-md-12">
+              <input type="hidden" id="QCKey" name="QCKey" [(ngModel)]="_questionContentViewModel.QCKey" value="Video" />
+              <input type="hidden" id="OrderID" name="OrderID" [(ngModel)]="_questionContentViewModel.OrderID" />
+              <input type="hidden" id="ID" name="ID" [(ngModel)]="_questionContentViewModel.ID" />
+              <!-- <input type="text" id="QCValue" name="QCValue" [(ngModel)]="_questionContentViewModel.QCValue" class="col-md-12 form-control" /> -->
+              <textarea id="QCValue" name="QCValue" maxlength="4000" required [(ngModel)]="_questionContentViewModel.QCValue" rows="3" class="col-md-12 form-control"></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <span id="errorMessageCourseChapterSection" class="fc-center error-text"></span>
+          </div>
+          <div class="form-group">
+            <span id="errorVDMessage" class="fc-center error-text"></span>
+          </div>
+        </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-sm" (click)="saveQuestionContent(_questionContentForm.valid, _questionContentForm.value,false)" >Save</button>
+        <button type="button" (click)="cancelCM()" class="btn btn-danger btn-sm pull-left" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Model Begins Here -->
+
+<!-- Model Begins Here -->
+
+<div id="addOrEditQTNIMG" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div id="modal-wizard-container">
+        <div class="modal-header">
+          <h3>Media - Image</h3>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" #_questionContentForm="ngForm"  novalidate name="frmAddNew" id="frmAddNew">
+          <div class="form-group" id="tc">
+            <label class="col-md-12 pull-left" >URL</label>
+            <div class="col-md-12">
+              <input type="hidden" id="QCKey" name="QCKey" [(ngModel)]="_questionContentViewModel.QCKey" value="Image" />
+              <input type="hidden" id="ID" name="ID" [(ngModel)]="_questionContentViewModel.ID" />
+              <input type="hidden" id="OrderID" name="OrderID" [(ngModel)]="_questionContentViewModel.OrderID" />
+              <textarea id="QCValue" name="QCValue" maxlength="4000" required [(ngModel)]="_questionContentViewModel.QCValue" rows="3" class="col-md-12 form-control"></textarea>
+              <!-- <input type="text" id="QCValue" name="QCValue" [(ngModel)]="_questionContentViewModel.QCValue" class="col-md-12 form-control" /> -->
+            </div>
+          </div>
+          <div class="form-group">
+            <span id="errorMessageCourseChapterSection" class="fc-center error-text"></span>
+          </div>
+          <div class="form-group">
+            <span id="errorIMMessage" class="fc-center error-text"></span>
+          </div>
+        </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-sm" (click)="saveQuestionContent(_questionContentForm.valid, _questionContentForm.value,false)" >Save</button>
+        <button type="button" (click)="cancelCM()" class="btn btn-danger btn-sm pull-left" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Model Begins Here -->
+
+<!-- Model Begins Here Text Answer Options -->
+
+<div id="addOrEditQCTA" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div id="modal-wizard-container">
+        <div class="modal-header">
+          <h3>Question Choices</h3>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" #_questionOptionForm="ngForm"  novalidate name="frmAddNew" id="frmAddNew">
+          <div class="form-group" id="tc">
+            <label class="col-md-12 pull-left" >Option Value</label>
+            <div class="col-md-12">
+              <textarea id="QCValue" name="QCValue" maxlength="4000" required [(ngModel)]="_questionOptionViewModel.QCValue" rows="3" class="col-md-12 form-control"></textarea>
+              <!-- <input type="text" id="QCValue" name="QCValue" [(ngModel)]="_questionOptionViewModel.QCValue" class="col-md-12 form-control" /> -->
+              <div id="QComment">
+                <input type="checkbox" id="Comment" name="Comment" class="col-md-12 form-control" [(ngModel)]="_questionOptionViewModel.Comment" />
+                <label for="Comment"> Ask Comments</label><br>
+              </div>
+
+              <input type="hidden" id="ID" name="ID" [(ngModel)]="_questionOptionViewModel.ID" />
+              <input type="hidden" id="Control" name="Control" [(ngModel)]="_questionOptionViewModel.Control" />
+              <input type="hidden" id="OrderID" name="OrderID" [(ngModel)]="_questionOptionViewModel.OrderID" />
+              <input type="hidden" id="QCKey" name="QCKey" [(ngModel)]="_questionOptionViewModel.QCKey" />
+            </div>
+          </div>
+          <div class="form-group">
+            <span id="errorMessageCourseChapterSection" class="fc-center error-text"></span>
+          </div>
+          <div class="form-group">
+            <span id="errorIMMessage" class="fc-center error-text"></span>
+          </div>
+        </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-sm" (click)="saveTextBox( _questionOptionForm.value)" >Save</button>
+        <button type="button" (click)="cancelCM()" class="btn btn-danger btn-sm pull-left" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Model Begins Here -->
+
+<!-- Model Begins Here Answers -->
+
+<div id="addOrEditQATA" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div id="modal-wizard-container">
+        <div class="modal-header">
+          <h3>Answer</h3>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" #_questionAnswerForm="ngForm"  novalidate name="frmAddNew" id="frmAddNew">
+          <div class="form-group" id="tc">
+            <label class="col-sm-12 pull-left" >Answer</label>
+            <div class="col-sm-12">
+              <textarea id="QCValue" name="QCValue" maxlength="4000" required [(ngModel)]="_questionAnswerViewModel.QCValue" rows="3" class="col-md-12 form-control"></textarea>
+              <!-- <input type="text" id="QCValue" name="QCValue" [(ngModel)]="_questionAnswerViewModel.QCValue" class="form-control" /> -->
+              <input type="hidden" id="ID" name="ID" [(ngModel)]="_questionAnswerViewModel.ID" />
+              <input type="hidden" id="Control" name="Control" [(ngModel)]="_questionAnswerViewModel.Control" />
+              <input type="hidden" id="OrderID" name="OrderID" [(ngModel)]="_questionAnswerViewModel.OrderID" />
+              <input type="hidden" id="QCKey" name="QCKey" [(ngModel)]="_questionAnswerViewModel.QCKey" class="col-md-12 form-control" />
+            </div>
+          </div>
+        </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-sm" (click)="saveAnswers( _questionAnswerForm.value)" >Save</button>
+        <button type="button" (click)="cancelCM()" class="btn btn-danger btn-sm pull-left" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Model Begins Here -->
+
+
+
+<!-- Model Begins Here -->
+
+<div id="addOrEditQCOB" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div id="modal-wizard-container">
+        <div class="modal-header">
+          <h3>Question Choices</h3>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" #_questionContentForm="ngForm"  novalidate name="frmAddNew" id="frmAddNew">
+          <div class="form-group" id="tc">
+            <label class="col-sm-12 pull-left" >Option Value</label>
+            <div class="col-sm-12">
+              <input type="hidden" id="QCValue" name="QCValue" [(ngModel)]="_questionContentViewModel.QCValue" value="OB" />
+              <input type="hidden" id="ID" name="ID" [(ngModel)]="_questionContentViewModel.ID" />
+              <input type="hidden" id="OrderID" name="OrderID" [(ngModel)]="_questionContentViewModel.OrderID" />
+              <input type="text" id="QCKey" name="QCKey" [(ngModel)]="_questionContentViewModel.QCKey" class="col-md-12" />
+            </div>
+          </div>
+          <div class="form-group">
+            <span id="errorMessageCourseChapterSection" class="fc-center error-text"></span>
+          </div>
+          <div class="form-group">
+            <span id="errorIMMessage" class="fc-center error-text"></span>
+          </div>
+        </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-sm" (click)="saveTextBox( _questionContentForm.value)" >Save</button>
+        <button type="button" (click)="cancelCM()" class="btn btn-danger btn-sm pull-left" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Model Begins Here -->
+
+<!-- Model Begins Here -->
+
+<div id="modal-remove" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div id="modal-wizard-container">
+        <div class="modal-header">
+          <h3>{{action}} Course</h3>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div>
+                  <div class="box-body">
+                      <p>Are you sure you want remove {{confirmationMessage}}?</p>
+                  </div>
+              </div>
+            </div>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+        <button type="submit"  class="btn btn-primary" (click)="remove(removeItem.AssessmentQuestionID)">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Model Begins Here -->
+
+
+
+<!-- Model Begins Here -->
+
+<div id="modal-removeqc" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div id="modal-wizard-container">
+        <div class="modal-header">
+          <h3>Content</h3>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div>
+                  <div class="box-body">
+                      <p>Are you sure you want to remove the Question Content?</p>
+                  </div>
+              </div>
+            </div>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default pull-left btn-sm" data-dismiss="modal">Close</button>
+        <button type="submit"  class="btn btn-primary btn-sm" (click)="removeByID(removeItem.ID)">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Model Begins Here -->
+
+
+
+<!-- Model Begins Here -->
+
+<div id="modal-remove-qo" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div id="modal-wizard-container">
+        <div class="modal-header">
+          <h3>Remove Question Content</h3>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div>
+                  <div class="box-body">
+                      <p>Are you sure you want to remove the content?</p>
+                  </div>
+              </div>
+            </div>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+        <button type="submit"  class="btn btn-primary" (click)="removeByQOID(removeItem.ID)">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Model Begins Here -->
+
+
+
+
+
+<!-- Model Begins Here -->
+
+<div id="modal-remove-qa" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div id="modal-wizard-container">
+        <div class="modal-header">
+          <h3>Remove Question Content</h3>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div>
+                  <div class="box-body">
+                      <p>Are you sure you want to remove the answer?</p>
+                  </div>
+              </div>
+            </div>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+        <button type="submit"  class="btn btn-primary" (click)="removeByQAID(removeItem.ID)">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Model Begins Here -->
+
+
+
+
+<script src="assets/v2/plugins/bootstrap-wizard/bootstrapwizard.js"></script>
